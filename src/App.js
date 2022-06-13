@@ -26,19 +26,12 @@ function App() {
         <div className="hero-content text-center ">
           <div className="max-w-md flex flex-col justify-center items-center">
             <h1 className="text-5xl font-bold">Are you a reseller?</h1>
-            <p className="py-6">This is the only tool you need to be a profitable reseller. Just search for a product, and get links that you can flip for profit. <i>The perfect potion.</i></p>
+            <p className="py-6">This is a great tool that helps you predict future prices on eBay. Just search for a product and <i>see the future.</i></p>
             <div className="divider mt-0"></div>
 
-            {/* if auth */}
-            <div className='flex justify-center items-center space-x-4'>
-              <Link to="/login" className="btn btn-primary">Log In</Link>
-              <Link to="/register" className="btn btn-primary">Register</Link>
-            </div>
-
-            {/* else auth */}
             <div className='flex flex-col justify-center items-center space-y-4'>
-              <h1>Welcome <span className='text-accent'>placeholder@email.com</span>, visit the dashboard!</h1>
-              <Link to="/" className="btn btn-primary">Dashboard</Link>
+              <h1>Welcome, visit the dashboard!</h1>
+              <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
             </div>
 
           </div>

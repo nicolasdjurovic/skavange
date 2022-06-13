@@ -1,5 +1,5 @@
 import React from 'react'
-import { BiSun, BiLogOut } from 'react-icons/bi'
+import { BiSun, BiLogOut, BiDonateHeart } from 'react-icons/bi'
 import { BsPerson } from 'react-icons/bs'
 import { FiSettings } from 'react-icons/fi'
 import { GoDashboard } from 'react-icons/go'
@@ -33,19 +33,18 @@ function Navbar() {
                 <Link to="/" className="btn btn-ghost normal-case text-xl flex justify-center items-center"><img src={logo} className='h-6 pr-2' />Skavange</Link>
             </div>
             <div className="flex-none">
-                <Link to='/pricing' className='btn btn-ghost'>PRICING</Link>
+                {/* <Link to='/pricing' className='btn btn-ghost'>PRICING</Link> */}
 
                 <button id='darkmode' className='btn btn-square btn-ghost' onClick={switchTheme} ><BiSun className='w-6 h-6' /></button>
 
                 <div className='dropdown dropdown-end'>
                     <label tabIndex='0' className='btn btn-square btn-ghost'><BsPerson className='w-6 h-6' /></label>
                     <ul tabIndex='0' className='dropdown-content menu p-2 shadow bg-base-100 rounded-box'>
-                        <li className=''><a className='btn-disabled'>Email</a></li>
-                        <li className=''><a><GoDashboard className='h-4 w-4' />Dashboard</a></li>
-                        <li className=''><a><FiSettings className='h-4 w-4' />Settings</a></li>
+                        {/* <li className=''><a className='btn-disabled'>Email</a></li> */}
+                        <Link to='/dashboard'><li className=''><a><GoDashboard className='h-4 w-4' />Dashboard</a></li></Link>
+                        {/* <li className=''><a><FiSettings className='h-4 w-4' />Settings</a></li> */}
 
-                        {/* if signed in */}
-                        <li className=''><a><BiLogOut className='h-4 w-4' />Log Out</a></li>
+                        <li className=''><a><BiDonateHeart className='h-4 w-4' />Donate</a></li>
                     </ul>
                 </div>
             </div>
