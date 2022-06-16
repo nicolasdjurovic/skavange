@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Footer from './Footer'
 import Navbar from './Navbar'
+import map from '../src/assets/map1.png'
 
 // import cheerio from 'cheerio';
 import axios from 'axios';
@@ -12,10 +13,15 @@ function Dashboard() {
     const [requestKeywords, setRequestKeywords] = useState('')
     const [requestExKeywords, setRequestExKeywords] = useState('')
     const [requestCategory, setRequestCategory] = useState()
-    
-    var responseOne = []
-    var responseTwo = []
-    
+    const [responseTwo, setResponseTwo] = useState([])
+    const [responseOne, setResponseOne] = useState([])
+    const [spinner, setSpinner] = useState(false);
+    // var responseTwo = []
+    var loading = true
+
+    var number = 0 - 2 
+    console.log(number)
+
 
     function handleApiRequest() {
 
@@ -35,8 +41,9 @@ function Dashboard() {
         //     }
         // };
 
-        // axios.request(optionsOne).then(function (oneResponse) {
-        //     console.log(oneResponse);
+        // axios.request(optionsOne).then(function (response) {
+        //     setResponseOne(response)
+        //     console.log(responseOne)
 
         // }).catch(function (error) {
         //     console.error(error);
@@ -56,29 +63,35 @@ function Dashboard() {
             }
         };
 
+        setSpinner(true);
 
-        axios.request(optionsTwo).then(function (twoResponse) {
-            responseTwo = twoResponse
+        axios.request(optionsTwo)
+            .then(function (response) {
+                setSpinner(false);
+                setResponseTwo(response.data.searched_items)
 
-        }).catch(function (error) {
-            console.error(error);
-        });
+            }).catch(function (error) {
+                console.error(error);
+            });
 
 
 
     }
+    const numbers = [1, 2, 3, 4, 5]
 
     return (
         <div className=''>
             <Navbar />
 
-            <div className='h-screen bg-base-200 px-6 py-20 space-y-4'>
+
+
+            <div className='h-full bg-base-200 px-6 py-20 space-y-4'>
 
                 <h1 className='text-xl font-bold'>Dashboard</h1>
 
                 <i>To make the most out of this, search very specifically and make sure to use all the inputs provided!</i>
 
-                <div className='flex flex-col lg:flex-row items-center lg:justify-start lg:space-x-4'>
+                <div className='flex flex-col items-center lg:justify-start lg:space-x-4 '>
 
                     <div class="form-control w-full">
                         <label class="label">
@@ -99,7 +112,7 @@ function Dashboard() {
                             <option value={267}>Books & Magazines #267</option>
                             <option value={12576}>Business & Industrial #12576</option>
                             <option value={625}>Cameras & Photo #625</option>
-                            <option value={15032}>Cell Phones & Accessories #15032</option>
+                            <option selected value={15032}>Cell Phones & Accessories #15032</option>
                             <option value={11450}>Clothing, Shoes & Accessories #11450</option>
                             <option value={11116}>Coins & Paper Money #11116</option>
                             <option value={1}>Collectibles #1</option>
@@ -128,35 +141,40 @@ function Dashboard() {
                             <option value={3252}>Travel #3252</option>
                             <option value={1249}>Video Games & Consoles #1249</option>
                         </select>
+                        {
+
+                            spinner ? <button class="btn loading btn-primary w-full my-4">loading</button> :
+
+                                <button type='submit' onClick={handleApiRequest} className='btn btn-primary w-full my-4'>Search</button>
+
+                        }
                     </div>
-
                 </div>
-
-                <button type='submit' onClick={handleApiRequest} className='btn btn-primary w-full'>Search</button>
 
                 {/* graph */}
 
                 {/* table */}
 
-                {responseTwo > 0 &&
+                {responseTwo.length > 0 &&
 
                     <div class="overflow-x-auto">
-                        <table class="table w-full">
+                        <table class="table w-full drop-shadow-lg">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Condition</th>
-                                    <th>Link Price</th>
-                                    <th>ASP</th>
-                                    <th>Profit</th>
-                                    <th></th>
+                                    <th className='bg-base-100 border-b-2 border-accent'>Name</th>
+                                    <th className='bg-base-100 border-b-2 border-accent'>Condition</th>
+                                    <th className='bg-base-100 border-b-2 border-accent'>Link Price</th>
+                                    <th className='bg-base-100 border-b-2 border-accent'>ASP</th>
+                                    <th className='bg-base-100 border-b-2 border-accent'>Profit</th>
+                                    <th className='bg-base-100 border-b-2 border-accent'></th>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 {
-                                    responseTwo.data.searched_items.map((item, index) => {
+                                    responseTwo.map(item => {
                                         return (
-                                            <tr key={index}>
+                                            <tr key={item.item_id}>
                                                 <td>
                                                     <div class="flex items-center space-x-3">
                                                         <div>
@@ -183,13 +201,12 @@ function Dashboard() {
                                         )
                                     })
                                 }
+
                             </tbody>
                         </table>
                     </div>
                 }
-
             </div>
-
 
             <Footer />
 
