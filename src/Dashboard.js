@@ -2,82 +2,47 @@ import React, { useState } from 'react'
 import Footer from './Footer'
 import Navbar from './Navbar'
 import map from '../src/assets/map1.png'
+import '../src/tableFix.css'
 
 // import cheerio from 'cheerio';
 import axios from 'axios';
 import { render } from '@testing-library/react';
 
-
 function Dashboard() {
 
-    const [requestKeywords, setRequestKeywords] = useState('')
+    const [requestKeywords, setRequestKeywords] = useState(null)
     const [requestExKeywords, setRequestExKeywords] = useState('')
-    const [requestCategory, setRequestCategory] = useState()
-    const [responseTwo, setResponseTwo] = useState([])
+    const [requestCategory, setRequestCategory] = useState('')
+
     const [responseOne, setResponseOne] = useState([])
+    
     const [spinner, setSpinner] = useState(false);
-    // var responseTwo = []
-    var loading = true
-
-    var number = 0 - 2 
-    console.log(number)
 
 
-    function handleApiRequest() {
 
-        // const optionsOne = {
-        //     method: 'POST',
-        //     url: 'https://ebay-average-selling-price.p.rapidapi.com/findCompletedItems',
-        //     headers: {
-        //         'content-type': 'application/json',
-        //         'X-RapidAPI-Host': 'ebay-average-selling-price.p.rapidapi.com',
-        //         'X-RapidAPI-Key': '5a09c23c28msh85582a9fd572b75p17b550jsn2d817f0a39d5'
-        //     },
-        //     data: {
-        //         keywords: requestKeywords,
-        //         excluded_keywords: requestExKeywords,
-        //         category_id: requestCategory,
-        //         max_search_results: 240,
-        //     }
-        // };
+    const handleApiRequest = () => {
 
-        // axios.request(optionsOne).then(function (response) {
-        //     setResponseOne(response)
-        //     console.log(responseOne)
-
-        // }).catch(function (error) {
-        //     console.error(error);
-        // });
-
-        const optionsTwo = {
-            method: 'POST',
-            url: 'https://ebay-scraper.p.rapidapi.com/product-search',
-            headers: {
-                'content-type': 'application/json',
-                'X-RapidAPI-Key': '5a09c23c28msh85582a9fd572b75p17b550jsn2d817f0a39d5',
-                'X-RapidAPI-Host': 'ebay-scraper.p.rapidapi.com'
+        const optionsOne = {
+            method: 'GET',
+            url: 'http://localhost:8000/products',
+            params: {
+                query: requestKeywords,
             },
-            data: {
-                keyword: requestKeywords,
-                page: 1
-            }
         };
 
         setSpinner(true);
 
-        axios.request(optionsTwo)
-            .then(function (response) {
-                setSpinner(false);
-                setResponseTwo(response.data.searched_items)
-
-            }).catch(function (error) {
-                console.error(error);
-            });
-
-
+        axios.request(optionsOne).then((response) => {
+            setResponseOne(response.data)
+            console.log(responseOne)
+            setSpinner(false);
+        }).catch((error) => {
+            console.log(error)
+        })
 
     }
-    const numbers = [1, 2, 3, 4, 5]
+
+
 
     return (
         <div className=''>
@@ -85,7 +50,7 @@ function Dashboard() {
 
 
 
-            <div className='h-full bg-base-200 px-6 py-20 space-y-4'>
+            <div className='h-full bg-base-200 px-6 pt-20 pb-80 space-y-4'>
 
                 <h1 className='text-xl font-bold'>Dashboard</h1>
 
@@ -97,50 +62,7 @@ function Dashboard() {
                         <label class="label">
                             <span class="label-text">Search for a product</span>
                         </label>
-                        <input type="text" placeholder="iPhone X space gray..." class="input input-bordered" value={requestKeywords} onChange={(e) => setRequestKeywords(e.target.value)} />
-                        <label class="label">
-                            <span class="label-text">Exclude keywords</span>
-                        </label>
-                        <input type="text" placeholder="Locked cracked case box read glass protector case charger..." class="input input-bordered" value={requestExKeywords} onChange={(e) => setRequestExKeywords(e.target.value)} />
-                        <label class="label">
-                            <span class="label-text">Choose a category</span>
-                        </label>
-                        <select class="select select-bordered" onChange={(e) => setRequestCategory(e.target.value)}>
-                            <option value={20081}>Antiques #20081</option>
-                            <option value={550}>Art #550</option>
-                            <option value={2984}>Baby #2984</option>
-                            <option value={267}>Books & Magazines #267</option>
-                            <option value={12576}>Business & Industrial #12576</option>
-                            <option value={625}>Cameras & Photo #625</option>
-                            <option selected value={15032}>Cell Phones & Accessories #15032</option>
-                            <option value={11450}>Clothing, Shoes & Accessories #11450</option>
-                            <option value={11116}>Coins & Paper Money #11116</option>
-                            <option value={1}>Collectibles #1</option>
-                            <option value={58058}>Computers/Tablets & Networking #58058</option>
-                            <option value={293}>Consumer Electronics #293</option>
-                            <option value={14339}>Crafts #14339</option>
-                            <option value={237}>Dolls & Bears #237</option>
-                            <option value={45100}>Entertainment Memorabilia #45100</option>
-                            <option value={99}>Everything Else #99</option>
-                            <option value={172008}>Gift Cards & Coupons #172008</option>
-                            <option value={26395}>Health & Beauty #26395</option>
-                            <option value={11700}>Home & Garden #11700</option>
-                            <option value={281}>Jewelry & Watches #281</option>
-                            <option value={11232}>Movies & TV #11232</option>
-                            <option value={11233}>Music #11233</option>
-                            <option value={619}>Musical Instruments & Gear #619</option>
-                            <option value={1281}>Pet Supplies #1281</option>
-                            <option value={870}>Pottery & Glass #870</option>
-                            <option value={10542}>Real Estate #10542</option>
-                            <option value={316}>Specialty Services #316</option>
-                            <option value={888}>Sporting Goods #888</option>
-                            <option value={64482}>Sports Mem, Cards & Fan Shop #64482</option>
-                            <option value={260}>Stamps #260</option>
-                            <option value={1305}>Tickets & Experiences #1305</option>
-                            <option value={220}>Toys & Hobbies #220</option>
-                            <option value={3252}>Travel #3252</option>
-                            <option value={1249}>Video Games & Consoles #1249</option>
-                        </select>
+                        <input type="text" placeholder="iPhone X space gray..." class="input input-bordered" value={requestKeywords} onChange={(e) => setRequestKeywords(e.target.value)} /> 
                         {
 
                             spinner ? <button class="btn loading btn-primary w-full my-4">loading</button> :
@@ -155,47 +77,57 @@ function Dashboard() {
 
                 {/* table */}
 
-                {responseTwo.length > 0 &&
+                {responseOne.length > 0 &&
 
                     <div class="overflow-x-auto">
                         <table class="table w-full drop-shadow-lg">
                             <thead>
                                 <tr>
-                                    <th className='bg-base-100 border-b-2 border-accent'>Name</th>
-                                    <th className='bg-base-100 border-b-2 border-accent'>Condition</th>
-                                    <th className='bg-base-100 border-b-2 border-accent'>Link Price</th>
-                                    <th className='bg-base-100 border-b-2 border-accent'>ASP</th>
-                                    <th className='bg-base-100 border-b-2 border-accent'>Profit</th>
-                                    <th className='bg-base-100 border-b-2 border-accent'></th>
+                                    <th className='bg-base-100 block -z-10'>Name</th>
+                                    <th className='bg-base-100'>Condition</th>
+                                    <th className='bg-base-100'>Link Price</th>
+                                    <th className='bg-base-100'>ASP</th>
+                                    <th className='bg-base-100'>Profit</th>
+                                    <th className='bg-base-100'></th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 {
-                                    responseTwo.map(item => {
+                                    responseOne.map(item => {
                                         return (
-                                            <tr key={item.item_id}>
+                                            <tr key={item.id}>
                                                 <td>
                                                     <div class="flex items-center space-x-3">
+                                                        <div class="avatar">
+                                                            <div class="mask mask-squircle w-12 h-12">
+                                                                <img src={item.image} alt="Product image" />
+                                                            </div>
+                                                        </div>
                                                         <div>
                                                             <p class="font-bold">{item.title}</p>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-ghost badge-sm">{item.condition}</span>
+                                                    <span class="badge badge-ghost badge-sm">{item.subtitle}</span>
                                                 </td>
                                                 <td>
-                                                    <p>${item.price.value}</p>
+                                                    <p>{item.price}</p>
                                                 </td>
                                                 <td>
-                                                    <p>$140</p>
+                                                    <p>$</p>
                                                 </td>
                                                 <td>
-                                                    <p className='text-accent'>$40</p>
+                                                    <p>$</p>
+                                                    {/* {responseOne > 0 ?
+                                                        <p className="text-accent">${responseOne - responseTwo.price.value}</p> :
+                                                        <p className='text-red'>${responseOne - responseTwo.price.value}</p>
+                                                    } */}
+
                                                 </td>
                                                 <th>
-                                                    <a href={item.url} target="_blank" class="btn btn-primary">Link</a>
+                                                    <a href={item.productLink} target="_blank" class="btn btn-primary">Link</a>
                                                 </th>
                                             </tr>
                                         )
