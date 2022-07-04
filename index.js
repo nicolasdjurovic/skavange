@@ -12,31 +12,48 @@ app.listen(8000, () => console.log('Server is running on port 8000'))
 app.get('/products', (req, res) => {
     const passedKeyword = req.query.query
     console.log(req)
-    const optionsOne = {
+    // const optionsOne = {
+    //     method: 'GET',
+    //     url: 'https://ebay-products-search-scraper.p.rapidapi.com/products',
+    //     params: {
+    //         query: passedKeyword,
+    //         page: '1',
+    //         Item_Location: 'us_only'
+    //     },
+    //     headers: {
+    //         'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+    //         'X-RapidAPI-Host': 'ebay-products-search-scraper.p.rapidapi.com'
+    //     }
+    // };
+
+    const options = {
         method: 'GET',
-        url: 'https://ebay-products-search-scraper.p.rapidapi.com/products',
-        params: {
-            query: passedKeyword,
-            page: '1',
-            Item_Location: 'us_only'
-        },
+        url: 'https://amazon-price1.p.rapidapi.com/search',
+        params: {keywords: passedKeyword, marketplace: 'US'},
         headers: {
-            'X-RapidAPI-Key': process.env.RAPID_API_KEY,
-            'X-RapidAPI-Host': 'ebay-products-search-scraper.p.rapidapi.com'
+          'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+          'X-RapidAPI-Host': 'amazon-price1.p.rapidapi.com'
         }
-    };
+      };
 
-    axios.request(optionsOne).then((response) => {
+    axios.request(options).then((response) => {
+        
+        
 
-
-        response.data.products.map(item => {
-            var rmDollar = parseFloat(item.price.replace(/$/g, ""));
-            var rmString = parseInt(rmDollar)
-            res.json(rmString)
+        let outputData = response.data.map(item => {
+            var num = item.price
+            var s2 = num.replace("$", "")
+            var s3 = parseFloat(s2)
+            item.price = s3
+            return{
+                'price': s3,
+            }
         });
 
-        console.log(response.data.products)
-        res.json(response.data.products)
+
+        console.log(outputData);
+        console.log(response.data)
+        res.json(response.data)
 
     }).catch((error) => {
         console.log(error)
