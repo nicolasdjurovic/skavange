@@ -5,16 +5,17 @@ import '../src/tableFix.css'
 
 // import cheerio from 'cheerio';
 import axios from 'axios';
+const brain = require('brain.js')
 
 function Dashboard() {
 
     const [requestKeywords, setRequestKeywords] = useState(null)
 
     const [responseOne, setResponseOne] = useState([])
-    
+
     const [spinner, setSpinner] = useState(false);
 
-
+    const [priceAi, setPriceAi] = useState([])
 
     const handleApiRequest = () => {
 
@@ -36,22 +37,49 @@ function Dashboard() {
             console.log(error)
         })
 
+        var net2 = new brain.recurrent.LSTMTimeStep();
+
+        const normalise = (x) => x / 10;
+        const denormalise = (x) => x * 10;
+
+        const training = responseOne.map(item => {
+            return item.price
+        })
+
+        const normalisedTrainingData = training.map(normalise);
+
+
+        console.log('Input array', normalisedTrainingData);
+
+        net2.train([
+            normalisedTrainingData
+        ]);
+
+        const output2 = net2.forecast(normalisedTrainingData, 3);
+
+        const outputRun2 = net2.run(normalisedTrainingData);
+
+        console.log('2) Forecast: ', output2.map(denormalise));
+
+        console.log('2) Run: ', outputRun2 * 10);
+        const finalOutput = outputRun2 * 10
+
+        setPriceAi(finalOutput)
+
     }
 
-
-
     return (
+
         <div className=''>
+
             <Navbar />
-
-
 
             <div className='h-full bg-base-200 px-6 pt-20 pb-80 space-y-4'>
 
-                
+
                 <h1 className='text-xl font-bold'>Dashboard</h1>
 
-                <i>To make the most out of this, search very specifically and make sure to use all the inputs provided!</i>
+                {/* <i>To make the most out of this, search very specifically and make sure to use all the inputs provided!</i> */}
 
                 <div className='flex flex-col items-center lg:justify-start lg:space-x-4 '>
 
@@ -59,10 +87,10 @@ function Dashboard() {
                         <label class="label">
                             <span class="label-text">Search for a product</span>
                         </label>
-                        <input type="text" placeholder="iPhone X Space Gray Unlocked -box -read -case -cover -screen -protector..." class="input input-bordered" value={requestKeywords} onChange={(e) => setRequestKeywords(e.target.value)} /> 
+                        <input type="text" placeholder="iPhone X Space Gray Unlocked -box -read -case -cover -screen -protector..." class="input input-bordered" value={requestKeywords} onChange={(e) => setRequestKeywords(e.target.value)} />
                         {
 
-                            spinner ? <button class="btn loading btn-primary w-full my-4">loading</button> :
+                            spinner ? <button class="btn loading btn-primary w-full my-4">Loading</button> :
 
                                 <button type='submit' onClick={handleApiRequest} className='btn btn-primary w-full my-4'>Search</button>
 
@@ -71,6 +99,8 @@ function Dashboard() {
                 </div>
 
                 {/* graph */}
+
+                Predicted Price: ${priceAi}
 
                 {/* table */}
 
