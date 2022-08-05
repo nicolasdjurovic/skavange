@@ -4,11 +4,11 @@
 
 This web app was made with react front end and node back end.
 
-/src/Dashboard.js - holds the main dashboard
+/src/Dashboard.js - holds the main dashboard with AI price predictor and api fetch
 
 /index.js - holds the node back end with express server with api fetch
 
-/src/App.js - holds the AI price predictor and api fetch
+/src/App.js - holds the home page
 
 ## Getting started
 
